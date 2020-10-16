@@ -1,0 +1,21 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+django-debug-toolbar = "~=2.1"
+
+[packages]
+django = "==3.1.2"
+redis = ">=3.2.0"
+requests = "*"
+gunicorn = "*"
+django-redis = "*"
+djangorestframework = "*"
+graphene-django = ">= 2.0"
+psycopg2-binary = "*"
+django-environ = "*"
+
+[requires]
+python_version = "3.7"

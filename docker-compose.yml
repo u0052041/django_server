@@ -1,0 +1,56 @@
+version: '3.7'
+services:
+  
+  web:
+    restart: always
+    build: ./django_server
+    command: gunicorn django_server.wsgi:application gthread --threads 10 --bind 0.0.0.0:8000 --reload
+    volumes:
+      - ./django_server:/home/django_server
+    ports:
+      - 8000:8000
+    expose:
+      - 8000
+    depends_on:
+      - db
+      - redis
+    networks:
+      - nginx_network
+
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=django_server
+      - POSTGRES_USER=jack
+      - POSTGRES_PASSWORD=z1x2c3a4
+    networks:
+      - nginx_network
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - web
+    networks:
+      - nginx_network
+
+  redis:
+    restart: always
+    image: redis
+    volumes:
+      - redis_data:/var/lib/redis/data/
+    expose:
+      - "6379"
+    networks:
+      - nginx_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:  # <-- and here
+  nginx_network:
+    driver: bridge
